@@ -21,7 +21,10 @@ intervals throughout each day.
 ## Loading and preprocessing the data
 
 The data needed for the assignment is stored in the [github][1] repository
-as a zip file. 
+as a zip file. The assignment instructions require that the first two steps
+(calcuating the mean for the total daily steps and evaluating the daily activity
+pattern) be done on the raw dataset. The third activity involves processing the
+data by replacing the NA values.
 
 
 **Obtaining the data from github**
@@ -97,6 +100,60 @@ The median of the total number of steps taken per day is `r smedian`.
 
 ## What is the average daily activity pattern?
 
+Since the steps are recorded in 5 minute intervals they can be used to investigate
+during which parts of the day the individual was the most active.
+
+
+**Mean for the steps taken during each interval**
+
+The 5 minute intervals are all numbered. A list of numbered intervals is created
+using the unique() function.
+
+The average number of steps (mean) that were taken during each time interval are
+calculated using a for loop and the results are saved in a data frame dMeans that
+will also be used in the next sections to replace the NA values.
+
+```{r intMean}
+
+    int <- unique(dataCSV$interval)
+    dMeans <- data.frame(Interval=integer(), Mean=integer())
+
+    for(i in int) {
+    	
+    	m <- mean(subset(dataCSV$steps, dataCSV$interval == i), na.rm=TRUE)
+    	dMeans[nrow(dMeans) + 1,] = c(i,m)
+    
+    }
+
+```
+
+
+**Plotting the daily activity pattern**
+
+The average number of steps in each time interval can best be visualized as a time
+series plot.
+
+```{r activityPlot}
+
+    plot(dMeans$Interval, dMeans$Mean, type = "l", xlab = "5 minute time interval", 
+         ylab = "Average number of steps", 
+         main = "Average number of steps for each time interval")
+
+```
+
+**Interval with the highest average number of steps**
+
+```{r intHighest}
+
+    aveHigh <- max(dMeans$Mean)
+    intHigh <- dMeans$Interval[dMeans$Mean == aveHigh]
+```
+
+The time series plot above shows a the daily activity patterns of the individual
+during these two months. There are very little activity before time interval 500 
+while the most activity takes place between time interval 500 and 1800. 
+
+The highest average number of steps, `r aveHigh` were given in interval `r intHigh`
 
 
 ## Imputing missing values
