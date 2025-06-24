@@ -12,18 +12,86 @@ The report is produced using r markdown to present both the r code and the
 results of that code together with the written text into one file that is 
 knitted into an html file.
 
+A dataset has been provided as part of the assignment. The data was collected from
+a personal activity monitoring device. During the period of October and November
+in 2012 the steps taken by an anonymous individual were recorded in 5 minute 
+intervals throughout each day.
+
 
 ## Loading and preprocessing the data
 
 The data needed for the assignment is stored in the [github][1] repository
-as a zip file. The first step is to download the data into a temporary folder 
-that will be deleted afterwards. 
+as a zip file. 
 
-From the temporary folder the .csv file is extracted using unz() to unzip the file
 
+**Obtaining the data from github**
+
+The first step is to download the zip file into a temporary folder. 
+From the temporary folder the .csv file is extracted using unz() to unzip the file.
+
+
+```{r loadingGit}
+    
+    dataTemp <- tempfile()
+
+    url1 <- "https://github.com/sandjinn/RepData_PeerAssessment1/blob/master/activity.zip?raw=TRUE"
+    
+    download.file(url1, dataTemp, mode = "wb")
+    
+    dataCSV <- read.csv(unz(dataTemp, "activity.csv"))
+    
+    unlink(dataTemp)
+```
 
 
 ## What is mean total number of steps taken per day?
+
+The steps for each day are recorded in 5 minute intervals. In order to calculate
+the average (in this case the mean) number of steps per day the total number of steps
+taken each day have to be calculated first. 
+
+
+**Calculate the total number of steps taken per day**
+
+By using the tapply() function the total number of steps per day can be 
+calculated using sum.
+
+```{r stepsDay}
+
+    stepsSum <- tapply(dataCSV$steps, dataCSV$date, sum)
+```
+
+
+**Make a histogram of the total number of steps taken each day**
+
+A histogram of the total number of steps taken each day (calculated above) shows 
+a fairly normal distribution.
+
+```{r stepsHist}
+
+    hist(stepsSum, main="Histogram of daily step count", 
+         xlab="Total number of steps taken per day")
+
+```
+
+
+**Calculate and report the mean and median of the total number of steps/day**
+
+```{r stepMean}
+
+    smean <- mean(stepsSum, na.rm = TRUE)
+
+```
+
+```{r stepMedian}
+
+    smedian <- median(stepsSum, na.rm = TRUE)
+
+```
+
+The mean value of the total number of steps taken per day is `r smean`.
+
+The median of the total number of steps taken per day is `r smedian`.
 
 
 
