@@ -5,8 +5,21 @@ output:
     keep_md: true
 ---
 
+This report is written as part of the John Hopkins course on Reproducable Research
+presented on Coursera. The aim of the assignment is to demonstrate how a large 
+data set can be utilized in reproducible research by using literate programming. 
+The report is produced using r markdown to present both the r code and the 
+results of that code together with the written text into one file that is 
+knitted into an html file.
+
 
 ## Loading and preprocessing the data
+
+The data needed for the assignment is stored in the [github][1] repository
+as a zip file. The first step is to download the data into a temporary folder 
+that will be deleted afterwards. 
+
+From the temporary folder the .csv file is extracted using unz() to unzip the file
 
 
 
@@ -23,3 +36,5 @@ output:
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+[1]: https://github.com/rdpeng/RepData_PeerAssessment1
