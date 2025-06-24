@@ -47,6 +47,8 @@ From the temporary folder the .csv file is extracted using unz() to unzip the fi
 ```
 
 
+
+
 ## What is mean total number of steps taken per day?
 
 The steps for each day are recorded in 5 minute intervals. In order to calculate
@@ -95,6 +97,7 @@ a fairly normal distribution.
 The mean value of the total number of steps taken per day is `r smean`.
 
 The median of the total number of steps taken per day is `r smedian`.
+
 
 
 
@@ -156,7 +159,87 @@ while the most activity takes place between time interval 500 and 1800.
 The highest average number of steps, `r aveHigh` were given in interval `r intHigh`
 
 
+
+
 ## Imputing missing values
+
+```{r nrNA}
+
+    naSum <- sum(is.na(dataCSV))
+
+```
+
+There are a number of missing values in the data set, `r naSum` in total.
+
+**Strategy for replacing NA values**
+
+The missing values can be replaced in a number of different ways. We know from
+the exploratory analysis completed in the steps above that the  total number of steps
+taken each day shows a fairly normal distribution and we know from visualizing the
+daily activity patterns that the number of steps taken in each time interval varies
+based on the time of day. For these reasons it has been decided to take the mean
+value of each time interval to replace NA values in that interval.
+
+
+**Creating a new data set with no missing values**
+
+A new data frame is created (dataNA) which is based of dataCSV but the NA values
+are replaced with the mean value for each respective time intervals. The mean for
+each interval that was calculated in a previous step and saved in dMeans will be used.
+
+The function uses a for loop to test for NA values in each row (r). If the values is
+missing the mean value from dMeans for that specific time interval (i) is imported
+into the dataNA$steps column (the first column).
+
+```{r replaceNA}
+
+    dataNA <- dataCSV
+
+    for(r in 1:nrow(dataNA)) {
+
+	    if(is.na(dataNA[r,1])) {
+	    	i <- dataNA[r,3]
+	    	dataNA[r,1] <- dMeans[dMeans$Interval == i, 2]
+	    }
+    }
+
+```
+
+**Testing the processed data set against the unprocessed data**
+
+In order to evaluate the impact of replacin the missing values, the first estimated
+results obtained on the unprocessed data (dataCSV) is compared to new results obtained
+by running the same code on the processed data (dataNA).
+
+```{r stepsNAHist}
+
+    stepsNASum <- tapply(dataNA$steps, dataNA$date, sum)
+
+    hist(stepsNASum, main="Histogram of daily step count of processed data", 
+         xlab="Total number of steps taken per day")
+
+```
+
+```{r stepNAMeanMedian}
+
+    smeanNA <- mean(stepsNASum, na.rm = TRUE)
+    smedianNA <- median(stepsNASum, na.rm = TRUE)
+
+```
+
+The processed data set can be evaluated by comparing the two histograms, 
+one for total daily steps calculated using the data set with missing values 
+compared to the same but using a data set where the missing values have been replaced.
+Overall the shape of the histograms are the similar, with the highest frequency
+occuring at the 10000 - 15000 total steps interval. The main difference is that
+on the transformed data set the frequency has just increased.
+
+The mean value for the total number of steps per day is the same between the first
+estimate (`r smean`) and the processed data (`r smeanNA`).
+
+But the medianhas increased from the estimate (`r smedian`) to the processed data
+(`r smedianNA`).
+
 
 
 
