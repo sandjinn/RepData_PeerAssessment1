@@ -245,4 +245,73 @@ But the medianhas increased from the estimate (`r smedian`) to the processed dat
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
+The final question asks if there are differences can be detected in the activity
+patterns recorded on weekdays vs weekends.
+
+**Creating a new vector for weekday/weekend values**
+
+The date on which the steps were recorded are given in the second column of the
+processed data set (dataNA$date). By using the as.POSIXlt and weekdays() functions
+the day of the week for each calender day can be calculated. Based on this day of the
+week a value (weekend or weekday) is added to a fourth column in the data set by
+using a for loop. The new column is name 'day'.
+
+```{r WeekdayOrEnd}
+
+    for (r in 1:nrow(dataNA)) {
+
+	    day <- weekdays(as.POSIXlt(dataNA[r,2]))
+	
+	    dataNA[r,4] <- ifelse(day == "Saturday" | day == "Sunday", "weekend", "weekday")
+
+    }
+
+    colnames(dataNA)[4]<- "day"
+
+```
+
+
+**Calculating the means for each interval on the weekdays and weekends**
+
+The mean for each numbered 5 minute time interval can be calculated by subsetting
+the processed data set (dataNA) into two, one for weedays and on for weekends.
+
+```{r subWeekEndOrDay}
+
+    dWeekday <- subset(dataNA, dataNA$day == "weekday") 
+    aveWeekday <- tapply(dWeekday$steps, dWeekday$interval, mean)
+    
+    dWeekend <- subset(dataNA, dataNA$day == "weekend") 
+    aveWeekend <- tapply(dWeekend$steps, dWeekend$interval, mean)
+    
+```
+
+
+**A time series plot to show activity pattern on a Weekday vs the Weekend**
+
+```{r plotWeekEndOrDay}
+
+    int <- unique(dataNA$interval)
+
+    par(mfrow=c(2,1))
+
+    plot(int, aveWeekend, type = "l", xlab = "5 minute time interval", 
+        ylab = "Average number of steps", main = "Weekend")
+
+    plot(int, aveWeekday, type = "l", xlab = "5 minute time interval", 
+        ylab = "Average number of steps", main = "Weekday")
+
+```
+
+
+The activity pattern on a weekend differs from that of one on a weekday in that
+the there is a spike in activity on weekdays between time intervals 750 and 950
+reaching up to 200 average number of steps. On the weekends the spike during the
+same is less, reaching only up to 150 average steps, but the average number of
+in the following intervals up to nr 1900 is higher on weekends than it is on
+weekdays.
+
+
+
+
 [1]: https://github.com/rdpeng/RepData_PeerAssessment1
