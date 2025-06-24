@@ -5,14 +5,14 @@ output:
     keep_md: true
 ---
 
-This report is written as part of the John Hopkins course on Reproducable Research
+This report is written as part of the John Hopkins course on Reproducible Research
 presented on Coursera. The aim of the assignment is to demonstrate how a large 
 data set can be utilized in reproducible research by using literate programming. 
 The report is produced using r markdown to present both the r code and the 
 results of that code together with the written text into one file that is 
 knitted into an html file.
 
-A dataset has been provided as part of the assignment. The data was collected from
+A data set has been provided as part of the assignment. The data was collected from
 a personal activity monitoring device. During the period of October and November
 in 2012 the steps taken by an anonymous individual were recorded in 5 minute 
 intervals throughout each day.
@@ -22,9 +22,9 @@ intervals throughout each day.
 
 The data needed for the assignment is stored in the [github][1] repository
 as a zip file. The assignment instructions require that the first two steps
-(calcuating the mean for the total daily steps and evaluating the daily activity
-pattern) be done on the raw dataset. The third activity involves processing the
-data by replacing the NA values.
+(calculating the mean for the total daily steps and evaluating the daily activity
+pattern) be done on the raw data set which included missing values. 
+The third activity involves processing the data by replacing the NA values.
 
 
 **Obtaining the data from github**
@@ -94,9 +94,9 @@ a fairly normal distribution.
 
 ```
 
-The mean value of the total number of steps taken per day is `r smean`.
+The mean value of the total number of steps taken per day is `r format(smean, scientific = FALSE)`.
 
-The median of the total number of steps taken per day is `r smedian`.
+The median of the total number of steps taken per day is `r format(smedian, scientific = FALSE)`.
 
 
 
@@ -152,9 +152,9 @@ series plot.
     intHigh <- dMeans$Interval[dMeans$Mean == aveHigh]
 ```
 
-The time series plot above shows a the daily activity patterns of the individual
-during these two months. There are very little activity before time interval 500 
-while the most activity takes place between time interval 500 and 1800. 
+The time series plot above shows the daily activity patterns of the individual
+during a two month time period. There are very little activity before time interval 
+500 while the most activity takes place between time interval 500 and 1800. 
 
 The highest average number of steps, `r aveHigh` were given in interval `r intHigh`
 
@@ -185,11 +185,11 @@ value of each time interval to replace NA values in that interval.
 
 A new data frame is created (dataNA) which is based of dataCSV but the NA values
 are replaced with the mean value for each respective time intervals. The mean for
-each interval that was calculated in a previous step and saved in dMeans will be used.
+each interval was calculated in a previous step and saved in dMeans.
 
-The function uses a for loop to test for NA values in each row (r). If the values is
-missing the mean value from dMeans for that specific time interval (i) is imported
-into the dataNA$steps column (the first column).
+The function uses a 'for loop' to test for NA values in each row (r). If the value
+is missing the mean value from dMeans for that specific time interval (i) is 
+imported into the dataNA$steps column (the first column).
 
 ```{r replaceNA}
 
@@ -207,7 +207,7 @@ into the dataNA$steps column (the first column).
 
 **Testing the processed data set against the unprocessed data**
 
-In order to evaluate the impact of replacin the missing values, the first estimated
+In order to evaluate the impact of replacing the missing values, the first estimated
 results obtained on the unprocessed data (dataCSV) is compared to new results obtained
 by running the same code on the processed data (dataNA).
 
@@ -223,6 +223,7 @@ by running the same code on the processed data (dataNA).
 ```{r stepNAMeanMedian}
 
     smeanNA <- mean(stepsNASum, na.rm = TRUE)
+    
     smedianNA <- median(stepsNASum, na.rm = TRUE)
 
 ```
@@ -230,22 +231,22 @@ by running the same code on the processed data (dataNA).
 The processed data set can be evaluated by comparing the two histograms, 
 one for total daily steps calculated using the data set with missing values 
 compared to the same but using a data set where the missing values have been replaced.
-Overall the shape of the histograms are the similar, with the highest frequency
-occuring at the 10000 - 15000 total steps interval. The main difference is that
-on the transformed data set the frequency has just increased.
+Overall the shape of the histograms are similar, with the highest frequency
+occurring at the 10000 - 15000 total steps interval. The main difference is that
+on the transformed data set the frequency has increased.
 
 The mean value for the total number of steps per day is the same between the first
-estimate (`r smean`) and the processed data (`r smeanNA`).
+estimate (`r format(smean, scientific = FALSE)`) and the processed data (`r format(smeanNA, scientific = FALSE)`).
 
-But the medianhas increased from the estimate (`r smedian`) to the processed data
-(`r smedianNA`).
+But the median has increased from the estimate (`r format(smedian, scientific = FALSE)`) to the processed data
+(`r format(smedianNA, scientific = FALSE)`).
 
 
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-The final question asks if there are differences can be detected in the activity
+The final question asks if differences can be detected in the activity
 patterns recorded on weekdays vs weekends.
 
 **Creating a new vector for weekday/weekend values**
@@ -254,7 +255,7 @@ The date on which the steps were recorded are given in the second column of the
 processed data set (dataNA$date). By using the as.POSIXlt and weekdays() functions
 the day of the week for each calender day can be calculated. Based on this day of the
 week a value (weekend or weekday) is added to a fourth column in the data set by
-using a for loop. The new column is name 'day'.
+using a 'for loop'. The new column is name 'day'.
 
 ```{r WeekdayOrEnd}
 
@@ -274,7 +275,7 @@ using a for loop. The new column is name 'day'.
 **Calculating the means for each interval on the weekdays and weekends**
 
 The mean for each numbered 5 minute time interval can be calculated by subsetting
-the processed data set (dataNA) into two, one for weedays and on for weekends.
+the processed data set (dataNA) into two, one for weekdays and on for weekends.
 
 ```{r subWeekEndOrDay}
 
@@ -289,27 +290,34 @@ the processed data set (dataNA) into two, one for weedays and on for weekends.
 
 **A time series plot to show activity pattern on a Weekday vs the Weekend**
 
-```{r plotWeekEndOrDay}
+```{r plotWeekEndOrDay, fig.height=8}
 
     int <- unique(dataNA$interval)
 
     par(mfrow=c(2,1))
 
     plot(int, aveWeekend, type = "l", xlab = "5 minute time interval", 
-        ylab = "Average number of steps", main = "Weekend")
+        ylab = "Average number of steps", main = "Weekend",
+        ylim = c(0, 250))
 
     plot(int, aveWeekday, type = "l", xlab = "5 minute time interval", 
-        ylab = "Average number of steps", main = "Weekday")
+        ylab = "Average number of steps", main = "Weekday",
+        ylim = c(0, 250))
 
 ```
 
 
-The activity pattern on a weekend differs from that of one on a weekday in that
+The activity pattern on a weekend differs from that of a weekday in that
 the there is a spike in activity on weekdays between time intervals 750 and 950
 reaching up to 200 average number of steps. On the weekends the spike during the
-same is less, reaching only up to 150 average steps, but the average number of
-in the following intervals up to nr 1900 is higher on weekends than it is on
-weekdays.
+same interval is less intense, reaching only up to 150 average steps But in the next period
+up to time interval 1900 the number of steps on average are higher on weekends than it is on
+weekdays. 
+
+All in all it appears that the time period during which the individual was more
+active started and ended later on a weekend than on a weekday. While there was a 
+increase in the number of steps early in the morning, on the weekdays the individual
+was more active throughout the whole day compared to weekdays.
 
 
 
