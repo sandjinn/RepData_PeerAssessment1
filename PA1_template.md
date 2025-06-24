@@ -7,7 +7,7 @@ output:
 
 This report is written as part of the John Hopkins course on Reproducible Research
 presented on Coursera. The aim of the assignment is to demonstrate how a large 
-data set can be utilized in reproducible research by using literate programming. 
+data set can be analyzing using he principles of reproducible research or literate programming. 
 The report is produced using r markdown to present both the r code and the 
 results of that code together with the written text into one file that is 
 knitted into an html file.
@@ -292,11 +292,11 @@ the processed data set (dataNA) into two, one for weekdays and on for weekends.
     par(mfrow=c(2,1))
 
     plot(int, aveWeekend, type = "l", xlab = "5 minute time interval", 
-        ylab = "Average number of steps", main = "Weekend",
+        ylab = "Average number of steps", main = "Activity pattern on weekend days",
         ylim = c(0, 250))
 
     plot(int, aveWeekday, type = "l", xlab = "5 minute time interval", 
-        ylab = "Average number of steps", main = "Weekday",
+        ylab = "Average number of steps", main = "Activity pattern on weekdays",
         ylim = c(0, 250))
 ```
 
